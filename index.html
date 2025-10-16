@@ -3,507 +3,708 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Leyes de Newton</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pioneros de la Mecánica de Fluidos</title>
     <style>
-        :root {
-            --color-primario: #22223b;
-            --color-acento: #4a90e2;
-            --color-fondo: #f8f9fa;
-            --color-blanco: #fff;
-            --color-texto: #22223b;
-            --color-exito: #43aa8b;
-            --color-error: #e63946;
-            --color-borde: #e0e0e0;
-            --color-shadow: rgba(34, 34, 59, 0.10);
-            --color-shadow-strong: rgba(34, 34, 59, 0.18);
-            --color-gradiente: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
-            --color-gradiente-2: linear-gradient(90deg, #4a90e2 0%, #43aa8b 100%);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
 
-        html,
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background: var(--color-gradiente);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            color: var(--color-texto);
-            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            color: #2c3e50;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f, #c44569);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .audio-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ff6b6b, #c44569);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.5);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(255, 107, 107, 0.7);
+        }
+
+        .audio-btn.playing {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 8px 30px rgba(255, 107, 107, 0.5);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 12px 40px rgba(255, 107, 107, 0.8);
+            }
+        }
+
+        nav {
+            background: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #c44569);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav a:hover::after {
+            width: 80%;
+        }
+
+        nav a:hover {
+            color: #ff6b6b;
         }
 
         .container {
-            background: var(--color-blanco);
-            max-width: 600px;
-            margin: 48px auto 32px auto;
-            padding: 40px 32px 32px 32px;
-            border-radius: 18px;
-            box-shadow: 0 8px 32px var(--color-shadow);
-            border: 1.5px solid var(--color-borde);
-            position: relative;
-            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
         }
 
-        h1 {
-            color: var(--color-primario);
-            text-align: center;
-            margin-bottom: 22px;
-            font-size: 2.3rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 8px var(--color-shadow-strong);
+        section {
+            background: white;
+            margin: 2rem 0;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+        }
+
+        section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
         h2 {
-            color: var(--color-acento);
-            margin-top: 32px;
-            margin-bottom: 12px;
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: 0.2px;
+            color: #2c3e50;
+            font-size: 2.8rem;
+            margin-bottom: 2rem;
+            font-weight: 800;
+            position: relative;
+            padding-bottom: 1rem;
         }
 
-        .ley {
-            background: #f5f7fa;
-            border-left: 4px solid var(--color-acento);
-            padding: 16px 22px;
-            margin-bottom: 20px;
-            border-radius: 7px;
-            font-size: 1.05rem;
-            box-shadow: 0 2px 8px var(--color-shadow);
-            transition: box-shadow 0.2s;
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #c44569);
+            border-radius: 3px;
         }
 
-        .ley:hover {
-            box-shadow: 0 4px 16px var(--color-shadow-strong);
+        h3 {
+            color: #ff6b6b;
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem 0;
+            font-weight: 700;
         }
 
-        .explicacion {
-            margin-bottom: 20px;
-            color: #555;
-            font-size: 1.01rem;
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
         }
 
-        label {
-            display: block;
-            margin-top: 16px;
-            color: var(--color-primario);
-            font-weight: 600;
-            font-size: 1.01rem;
-            letter-spacing: 0.1px;
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff6b6b, #c44569);
         }
 
-        input[type="number"] {
-            width: 100%;
-            padding: 9px 12px;
-            margin-top: 5px;
-            border: 1.5px solid var(--color-borde);
-            border-radius: 5px;
-            font-size: 1.06rem;
+        .timeline-item {
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .timeline-content {
+            background: linear-gradient(135deg, #fff5f5, #ffffff);
+            padding: 2rem;
+            border-radius: 20px;
+            width: 45%;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.15);
+            border: 2px solid #ffe0e0;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.25);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-date {
+            font-weight: 800;
+            color: #ff6b6b;
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, #ff6b6b, #c44569);
+            border: 5px solid white;
+            border-radius: 50%;
+            top: 0;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5);
+        }
+
+        .card {
+            background: linear-gradient(135deg, #fff5f5, #ffffff);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 20px;
+            border-left: 6px solid #ff6b6b;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-left-color: #c44569;
+            transform: translateX(10px);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.2);
+        }
+
+        .formula {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 1.8rem;
+            color: #ff6b6b;
+            box-shadow: 0 10px 30px rgba(44, 62, 80, 0.3);
+            font-weight: 700;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #fff5f5, #ffe0e0);
+            border: 2px solid #ffb3b3;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            border-left: 6px solid #ff6b6b;
+        }
+
+        .highlight strong {
+            color: #c44569;
+            font-size: 1.15rem;
+        }
+
+        .explanation {
             background: #f8f9fa;
-            box-sizing: border-box;
-            transition: border 0.2s, box-shadow 0.2s;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            border-left: 4px solid #ff6b6b;
+            font-size: 0.95rem;
+            color: #555;
         }
 
-        input[type="number"]:focus {
-            border: 1.5px solid var(--color-acento);
-            outline: none;
-            box-shadow: 0 2px 8px var(--color-shadow);
+        ul {
+            margin: 1rem 0 1rem 2rem;
         }
 
-        button,
-        .reiniciar-btn {
-            margin-top: 20px;
-            width: 100%;
-            padding: 12px 0;
-            background: var(--color-gradiente-2);
-            color: var(--color-blanco);
-            border: none;
-            border-radius: 6px;
-            font-size: 1.08rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px var(--color-shadow);
-            letter-spacing: 0.2px;
+        li {
+            margin: 1rem 0;
+            color: #555;
         }
 
-        button:hover,
-        .reiniciar-btn:hover {
-            background: linear-gradient(90deg, #43aa8b 0%, #4a90e2 100%);
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 4px 16px var(--color-shadow-strong);
+        strong {
+            color: #2c3e50;
         }
 
-        .resultado {
-            margin-top: 18px;
-            font-size: 1.13rem;
-            color: var(--color-exito);
+        footer {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
             text-align: center;
-            font-weight: 600;
-            letter-spacing: 0.1px;
+            padding: 3rem;
+            margin-top: 3rem;
         }
 
-        .trivia {
-            margin-top: 32px;
-            background: #f5f7fa;
-            border-radius: 9px;
-            padding: 22px 16px 16px 16px;
-            box-shadow: 0 2px 8px var(--color-shadow);
-            border: 1.5px solid var(--color-borde);
-            transition: box-shadow 0.2s;
-        }
-
-        .trivia:hover {
-            box-shadow: 0 4px 16px var(--color-shadow-strong);
-        }
-
-        .pregunta {
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--color-primario);
-            font-size: 1.08rem;
-        }
-
-        .opciones label {
-            display: block;
-            margin-bottom: 10px;
-            cursor: pointer;
-            background: #fff;
-            border-radius: 4px;
-            padding: 8px 14px;
-            border: 1.5px solid var(--color-borde);
-            transition: background 0.2s, border 0.2s, box-shadow 0.2s;
-            font-size: 1.01rem;
-            font-weight: 500;
-        }
-
-        .opciones label:hover {
-            background: #eaf1fb;
-            border: 1.5px solid var(--color-acento);
-            box-shadow: 0 2px 8px var(--color-shadow);
-        }
-
-        .trivia-resultado {
-            margin-top: 14px;
-            font-size: 1.05rem;
-            text-align: center;
-            font-weight: 600;
-            letter-spacing: 0.1px;
-        }
-
-        .puntaje-final {
-            margin-top: 26px;
-            background: #f5f7fa;
-            border-left: 4px solid var(--color-acento);
-            padding: 18px 20px;
-            border-radius: 7px;
-            color: var(--color-primario);
-            font-size: 1.13rem;
-            text-align: center;
-            box-shadow: 0 2px 8px var(--color-shadow);
-            border: 1.5px solid var(--color-borde);
-            font-weight: 600;
-        }
-
-        .reiniciar-btn {
-            margin-top: 16px;
-            background: var(--color-primario);
-            font-size: 1.05rem;
-        }
-
-        .reiniciar-btn:hover {
-            background: #393960;
-        }
-
-        /* Animaciones */
-        .container,
-        .ley,
-        .trivia,
-        .puntaje-final {
-            animation: fadeIn 0.7s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Scrollbar minimalista */
-        ::-webkit-scrollbar {
-            width: 8px;
-            background: #e0eafc;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #b8c6db;
-            border-radius: 4px;
-        }
-
-        /* Responsive */
-        @media (max-width: 700px) {
-            .container {
-                padding: 16px 3vw;
+            .timeline::before {
+                left: 20px;
             }
 
-            h1 {
-                font-size: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 8px 1vw;
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
             }
 
-            h1 {
-                font-size: 1.1rem;
+            .timeline-dot {
+                left: 20px;
             }
-        }
 
-        .footer {
-            width: 100%;
-            background: var(--color-blanco);
-            border-top: 1.5px solid var(--color-borde);
-            margin-top: 32px;
-            padding: 0;
-            box-shadow: 0 -2px 12px var(--color-shadow);
-        }
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
 
-        .footer-content {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 18px 0 14px 0;
-            text-align: center;
-            color: var(--color-primario);
-            font-size: 1.01rem;
-            letter-spacing: 0.1px;
-        }
-
-        .footer-content strong {
-            color: var(--color-acento);
-            font-weight: 600;
-        }
-
-        @media (max-width: 700px) {
-            .footer-content {
-                font-size: 0.97rem;
-                padding: 12px 0 10px 0;
+            .audio-btn {
+                width: 60px;
+                height: 60px;
+                bottom: 20px;
+                right: 20px;
             }
         }
     </style>
 </head>
 
 <body>
+    <button class="audio-btn" id="audioBtn" title="Escuchar narración">🔊</button>
+
+    <header>
+        <h1>ipm 146 centenario</h1>
+        <p>Torricelli, Pascal y Bernoulli</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#timeline">Cronología</a></li>
+            <li><a href="#torricelli">Torricelli</a></li>
+            <li><a href="#pascal">Pascal</a></li>
+            <li><a href="#bernoulli">Bernoulli</a></li>
+        </ul>
+    </nav>
+
     <div class="container">
-        <h1>Leyes de Newton</h1>
+        <section id="timeline">
+            <h2> Línea de Tiempo</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">1643</div>
+                        <h3>Barómetro de Torricelli</h3>
+                        <p>Primera evidencia de la presión atmosférica y creación del vacío artificial.</p>
+                    </div>
+                </div>
 
-        <h2>Primera Ley: Ley de la Inercia</h2>
-        <div class="ley">
-            <strong>Enunciado:</strong> Todo cuerpo permanece en estado de reposo o de movimiento rectilíneo uniforme a
-            menos que una fuerza externa actúe sobre él.<br>
-            <strong>Explicación:</strong> Los objetos tienden a mantener su estado actual (reposo o movimiento) si no
-            hay fuerzas que los modifiquen.<br>
-            <strong>Ejemplo:</strong> Un libro sobre una mesa permanece en reposo hasta que alguien lo empuja.
-        </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">1648</div>
+                        <h3>Experimento de Pascal</h3>
+                        <p>Demuestra que la presión disminuye con la altitud.</p>
+                    </div>
+                </div>
 
-        <h2>Segunda Ley: Ley Fundamental de la Dinámica</h2>
-        <div class="ley">
-            <strong>Enunciado:</strong> La aceleración de un objeto es directamente proporcional a la fuerza neta que
-            actúa sobre él e inversamente proporcional a su masa.<br>
-            <strong>Fórmula:</strong> <em>F = m × a</em><br>
-            <strong>Explicación:</strong> Esta ley explica cómo cambia el movimiento de un objeto cuando se le aplica
-            una fuerza.<br>
-            <strong>Ejemplo:</strong> Empujar un carrito vacío es más fácil que empujar uno lleno.
-        </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">1653</div>
+                        <h3>Principio de Pascal</h3>
+                        <p>La presión se transmite uniformemente en fluidos.</p>
+                    </div>
+                </div>
 
-        <div class="explicacion">
-            <strong>Calcula la fuerza:</strong>
-        </div>
-        <label for="masa">Masa (kg):</label>
-        <input type="number" id="masa" min="0" step="any">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">1738</div>
+                        <h3>Principio de Bernoulli</h3>
+                        <p>Relación entre velocidad y presión en fluidos en movimiento.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <label for="aceleracion">Aceleración (m/s²):</label>
-        <input type="number" id="aceleracion" min="0" step="any">
+        <section id="torricelli">
+            <h2> Evangelista Torricelli</h2>
 
-        <button onclick="calcularFuerza()">Calcular Fuerza</button>
-        <div class="resultado" id="resultado"></div>
+            <div class="card">
+                <h3>El Barómetro (1643)</h3>
+                <p>Torricelli llenó un tubo de vidrio de 1 metro con mercurio, lo tapó con el dedo, lo invirtió y lo
+                    sumergió en un recipiente con mercurio. Al quitar el dedo, el mercurio bajó hasta 76 cm.</p>
 
-        <h2>Tercera Ley: Ley de Acción y Reacción</h2>
-        <div class="ley">
-            <strong>Enunciado:</strong> Para cada acción siempre hay una reacción igual y opuesta.<br>
-            <strong>Explicación:</strong> Si un objeto A ejerce una fuerza sobre un objeto B, el objeto B ejerce una
-            fuerza igual y en sentido contrario sobre el objeto A.<br>
-            <strong>Ejemplo:</strong> Cuando saltas, tus piernas empujan el suelo hacia abajo y el suelo te empuja hacia
-            arriba.
-        </div>
+                <div class="explanation">
+                    <strong>¿Por qué no se cae todo el mercurio?</strong> Porque el peso del aire atmosférico empuja el
+                    mercurio en el recipiente hacia arriba, sosteniendo la columna. El espacio vacío arriba del mercurio
+                    fue el primer vacío creado por el ser humano.
+                </div>
 
-        <div class="trivia" id="trivia">
-            <div class="pregunta" id="pregunta"></div>
-            <div class="opciones" id="opciones"></div>
-            <button onclick="siguientePregunta()" id="btnSiguiente" style="display:none;">Siguiente pregunta</button>
-            <div class="trivia-resultado" id="triviaResultado"></div>
-        </div>
+                <div class="highlight">
+                    <strong>Impacto:</strong> Demostró que el aire tiene peso y que existe el vacío. Antes se creía que
+                    "la naturaleza aborrece el vacío" y que era imposible crearlo.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Teorema de Torricelli</h3>
+                <p>Si haces un agujero en un tanque de agua, la velocidad de salida del agua depende de la altura del
+                    agua sobre el agujero.</p>
+
+                <div class="formula">
+                    v = √(2gh)
+                </div>
+
+                <div class="explanation">
+                    <strong>Explicación simple:</strong> Cuanto más alto esté el agua sobre el agujero, más rápido sale.
+                    Es como si el agua "cayera" por ese agujero con la misma velocidad que alcanzaría cayendo libremente
+                    desde esa altura. Por eso los chorros de una fuente llegan más lejos cuando hay más agua en el
+                    tanque.
+                </div>
+
+                <p><strong>Uso práctico:</strong> Calcular cuánta agua fluye por tuberías, diseñar sistemas de riego,
+                    represas y fuentes.</p>
+            </div>
+        </section>
+
+        <section id="pascal">
+            <h2> Blaise Pascal</h2>
+
+            <div class="card">
+                <h3>Principio de Pascal (1653)</h3>
+                <p>Cuando presionas un fluido encerrado (líquido o gas en un recipiente cerrado), esa presión se
+                    transmite igual a todos los puntos del fluido.</p>
+
+                <div class="formula">
+                    F₁/A₁ = F₂/A₂
+                </div>
+
+                <div class="explanation">
+                    <strong>Ejemplo cotidiano:</strong> Imagina un globo lleno de agua. Si lo aprietas por un lado, todo
+                    el globo se pone duro, no solo donde lo aprietas. La presión se distribuye por todo el agua. Esto es
+                    el principio de Pascal: la presión se transmite por igual en todas direcciones.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>¿Cómo funciona la prensa hidráulica?</h3>
+                <p>Si aplicas una pequeña fuerza en un pistón pequeño, puedes levantar objetos muy pesados con un pistón
+                    grande. La clave es que la presión es la misma en ambos pistones.</p>
+
+                <div class="explanation">
+                    <strong>La magia de los fluidos:</strong> Si el pistón grande tiene 10 veces más área que el
+                    pequeño, la fuerza se multiplica por 10. Con 10 kg de fuerza puedes levantar 100 kg. Es como una
+                    palanca, pero usando líquidos.
+                </div>
+
+                <div class="highlight">
+                    <strong>Aplicaciones:</strong>
+                    <ul>
+                        <li><strong>Frenos de auto:</strong> Tu pie presiona el pedal con poca fuerza, pero se
+                            multiplica para frenar las ruedas</li>
+                        <li><strong>Gatos hidráulicos:</strong> Levantan autos con bombeo manual</li>
+                        <li><strong>Excavadoras:</strong> Los brazos se mueven con cilindros hidráulicos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Experimento del Puy de Dôme (1648)</h3>
+                <p>Pascal midió la presión atmosférica al nivel del mar y en la cima de una montaña. Descubrió que en la
+                    montaña hay menos presión.</p>
+
+                <div class="explanation">
+                    <strong>¿Por qué ocurre esto?</strong> Porque el aire tiene peso. Cuanto más alto subes, menos aire
+                    hay sobre ti, entonces menos presión. Es como bucear: mientras más profundo vas, más agua hay sobre
+                    ti y más presión sientes. En el aire es al revés: más alto = menos presión.
+                </div>
+            </div>
+        </section>
+
+        <section id="bernoulli">
+            <h2> Daniel Bernoulli</h2>
+
+            <div class="card">
+                <h3>Principio de Bernoulli (1738)</h3>
+                <p>Descubrimiento revolucionario: cuando un fluido se mueve más rápido, su presión disminuye.</p>
+
+                <div class="formula">
+                    P + ½ρv² + ρgh = constante
+                </div>
+
+                <div class="explanation">
+                    <strong>¿Qué significa?</strong> Cuando el aire o el agua aceleran, "pierden" presión. Es un
+                    intercambio de energía: más velocidad = menos presión, y viceversa. La suma total de energía siempre
+                    se mantiene igual.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>¿Cómo vuelan los aviones?</h3>
+                <p>Las alas tienen una forma especial: curvas arriba, planas abajo. Cuando el avión se mueve, el aire
+                    sobre el ala recorre más distancia y va más rápido que el aire debajo.</p>
+
+                <div class="explanation">
+                    <strong>El secreto del vuelo:</strong>
+                    <ul>
+                        <li>Aire arriba del ala = más rápido = <strong>menos presión</strong></li>
+                        <li>Aire abajo del ala = más lento = <strong>más presión</strong></li>
+                        <li>Resultado: el ala es empujada hacia arriba (sustentación)</li>
+                    </ul>
+                    Sin el Principio de Bernoulli, no existirían los aviones modernos.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Otras aplicaciones fascinantes</h3>
+
+                <p><strong> Autos de carrera:</strong> Los alerones generan fuerza hacia abajo usando flujo de aire
+                    rápido arriba y lento abajo, aumentando el agarre.</p>
+
+                <p><strong>Efecto curvo en deportes:</strong> Cuando una pelota gira, un lado se mueve más rápido con
+                    el aire (menos presión) y el otro más lento (más presión). Esto curva la trayectoria.</p>
+
+                <p><strong> Cortina de ducha:</strong> El agua caliente acelera el aire, reduce su presión, y la
+                    cortina es empujada hacia adentro por la presión exterior.</p>
+
+                <div class="explanation">
+                    <strong>Atomizadores y perfumes:</strong> Al presionar, el aire sale rápido por un tubo estrecho
+                    (baja presión). Esta baja presión succiona el líquido de un depósito y lo dispersa en gotitas finas.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Teoría Cinética de Gases</h3>
+                <p>Bernoulli propuso que los gases son millones de partículas rebotando constantemente. La presión es el
+                    resultado de estos choques contra las paredes.</p>
+
+                <div class="explanation">
+                    <strong>Visión revolucionaria:</strong> Explicó que la temperatura es movimiento: mientras más
+                    caliente está un gas, más rápido se mueven sus partículas. Esta idea anticipó la física moderna en
+                    más de 100 años.
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2> La Evolución del Conocimiento</h2>
+
+            <div class="card">
+                <h3>De lo estático a lo dinámico</h3>
+                <p><strong>Torricelli:</strong> "El aire pesa y presiona" → Fluidos en reposo</p>
+                <p><strong>Pascal:</strong> "La presión se transmite uniformemente" → Fluidos confinados</p>
+                <p><strong>Bernoulli:</strong> "Velocidad y presión están conectadas" → Fluidos en movimiento</p>
+
+                <div class="highlight">
+                    Cada uno construyó sobre el trabajo del anterior, creando la base completa de la <strong>mecánica de
+                        fluidos</strong> que permite la aviación, hidráulica, meteorología y miles de tecnologías
+                    modernas.
+                </div>
+            </div>
+        </section>
     </div>
-    <div class="container" style="margin-top:0;">
-        <div id="puntajeFinal" class="puntaje-final" style="display:none;"></div>
-        <button class="reiniciar-btn" id="btnReiniciar" style="display:none;" onclick="reiniciarTrivia()">Reiniciar
-            encuesta</button>
-    </div>
-    <footer class="footer">
-        <div class="footer-content">
-            <span>Realizado por: <strong>Facundo Merlo</strong>, <strong>Jonas Gigena</strong>, <strong>Ulises
-                    Machuca</strong></span>
-        </div>
+
+    <footer>
+        <h3> Legado Científico</h3>
+        <p>Tres mentes brillantes que descifraron los secretos de los fluidos</p>
+        <p>Sus descubrimientos transformaron el mundo para siempre</p>
     </footer>
-    <script>
-        // Calculadora de fuerza
-        function calcularFuerza() {
-            const masa = parseFloat(document.getElementById('masa').value);
-            const aceleracion = parseFloat(document.getElementById('aceleracion').value);
-            const resultado = document.getElementById('resultado');
 
-            if (isNaN(masa) || isNaN(aceleracion)) {
-                resultado.textContent = "Por favor, ingresa valores válidos.";
-                resultado.style.color = "var(--color-error)";
+    <script>
+        //tatatatattattaattatatata
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Animación de aparición
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(section);
+        });
+
+        // Sistema de narración
+        const audioBtn = document.getElementById('audioBtn');
+        const texts = {
+            intro: "Bienvenido al mundo de la mecánica de fluidos. Descubriremos los trabajos de tres científicos que revolucionaron la física.",
+            torricelli: "Evangelista Torricelli inventó el barómetro en 1643. Llenó un tubo con mercurio y lo invirtió en un recipiente. El mercurio no se cayó completamente porque el aire atmosférico lo sostenía. Esto demostró que el aire tiene peso y presión. También descubrió que la velocidad de salida de un líquido depende de su altura, fundamental para diseñar sistemas hidráulicos.",
+            pascal: "Blaise Pascal descubrió que la presión en un fluido encerrado se transmite uniformemente en todas direcciones. Esto permite que los frenos hidráulicos funcionen: una pequeña presión en el pedal se multiplica para frenar las ruedas. Pascal también demostró que la presión atmosférica disminuye con la altitud, midiendo la presión al nivel del mar y en una montaña.",
+            bernoulli: "Daniel Bernoulli revolucionó la física con un descubrimiento simple pero poderoso: cuando un fluido se mueve más rápido, su presión disminuye. Esto explica cómo vuelan los aviones: el aire fluye más rápido sobre el ala curvada, creando menos presión arriba que abajo, generando sustentación. También explica las curvas en deportes, los atomizadores y hasta por qué la cortina de ducha se pega a ti.",
+            conclusion: "Estos tres científicos construyeron juntos la base de la mecánica de fluidos moderna. Sus descubrimientos permiten que existan aviones, sistemas hidráulicos, predicción del clima y miles de tecnologías que usamos cada día."
+        };
+
+        let currentIndex = 0;
+        let speaking = false;
+        let utterance = null;
+        const sections = ['intro', 'torricelli', 'pascal', 'bernoulli', 'conclusion'];
+
+        audioBtn.addEventListener('click', () => {
+            if (speaking) {
+                window.speechSynthesis.cancel();
+                audioBtn.classList.remove('playing');
+                audioBtn.textContent = '🔊';
+                speaking = false;
+                currentIndex = 0;
+            } else {
+                speakNext();
+            }
+        });
+
+        function speakNext() {
+            if (currentIndex >= sections.length) {
+                audioBtn.classList.remove('playing');
+                audioBtn.textContent = '🔊';
+                speaking = false;
+                currentIndex = 0;
                 return;
             }
 
-            const fuerza = masa * aceleracion;
-            resultado.textContent = `Fuerza = ${fuerza.toFixed(2)} N`;
-            resultado.style.color = "var(--color-exito)";
-        }
+            speaking = true;
+            audioBtn.classList.add('playing');
+            audioBtn.textContent = '⏸';
 
-        // Trivia de las Leyes de Newton
-        const preguntas = [
-            {
-                pregunta: "¿Cuál es la fórmula de la Segunda Ley de Newton?",
-                opciones: ["F = m × a", "E = m × c²", "V = d / t", "P = m × g"],
-                respuesta: 0
-            },
-            {
-                pregunta: "¿Cómo se llama la tendencia de los objetos a mantener su estado de movimiento?",
-                opciones: ["Gravedad", "Inercia", "Fricción", "Energía"],
-                respuesta: 1
-            },
-            {
-                pregunta: "¿Qué ley explica que al empujar una pared, la pared te empuja con igual fuerza en sentido contrario?",
-                opciones: ["Primera Ley", "Segunda Ley", "Tercera Ley", "Ley de la Gravedad"],
-                respuesta: 2
-            },
-            {
-                pregunta: "Si duplicas la masa de un objeto y aplicas la misma fuerza, ¿qué sucede con la aceleración?",
-                opciones: [
-                    "Se duplica",
-                    "Se reduce a la mitad",
-                    "No cambia",
-                    "Se vuelve cero"
-                ],
-                respuesta: 1
-            },
-            {
-                pregunta: "¿Quién formuló las tres leyes del movimiento?",
-                opciones: [
-                    "Isaac Newton",
-                    "Albert Einstein",
-                    "Galileo Galilei",
-                    "Nikola Tesla"
-                ],
-                respuesta: 0
-            },
-            {
-                pregunta: "¿Qué fuerza se opone al movimiento de los objetos sobre una superficie?",
-                opciones: [
-                    "Fuerza centrípeta",
-                    "Fuerza de fricción",
-                    "Fuerza gravitatoria",
-                    "Fuerza magnética"
-                ],
-                respuesta: 1
-            }
-        ];
+            utterance = new SpeechSynthesisUtterance(texts[sections[currentIndex]]);
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
 
-        let preguntaActual = 0;
-        let respondido = false;
-        let puntaje = 0;
-
-        function mostrarPregunta() {
-            document.getElementById('triviaResultado').textContent = "";
-            const p = preguntas[preguntaActual];
-            document.getElementById('pregunta').textContent = p.pregunta;
-            const opcionesDiv = document.getElementById('opciones');
-            opcionesDiv.innerHTML = "";
-            p.opciones.forEach((op, i) => {
-                const label = document.createElement('label');
-                label.innerHTML = `<input type="radio" name="opcion" value="${i}"> ${op}`;
-                opcionesDiv.appendChild(label);
-            });
-            document.getElementById('btnSiguiente').style.display = "none";
-            respondido = false;
-            opcionesDiv.onclick = function (e) {
-                if (respondido) return;
-                if (e.target && e.target.name === "opcion") {
-                    verificarRespuesta(parseInt(e.target.value));
-                }
+            utterance.onend = () => {
+                currentIndex++;
+                setTimeout(speakNext, 1000);
             };
-        }
 
-        function verificarRespuesta(seleccion) {
-            respondido = true;
-            const correcta = preguntas[preguntaActual].respuesta;
-            const resultadoDiv = document.getElementById('triviaResultado');
-            if (seleccion === correcta) {
-                resultadoDiv.textContent = "¡Correcto!";
-                resultadoDiv.style.color = "var(--color-exito)";
-                puntaje++;
-            } else {
-                resultadoDiv.textContent = "Incorrecto. La respuesta correcta es: " + preguntas[preguntaActual].opciones[correcta];
-                resultadoDiv.style.color = "var(--color-error)";
-            }
-            document.getElementById('btnSiguiente').style.display = (preguntaActual < preguntas.length - 1) ? "block" : "none";
-            // Si es la última pregunta, mostrar puntaje final
-            if (preguntaActual === preguntas.length - 1) {
-                setTimeout(mostrarPuntajeFinal, 900);
-            }
-        }
+            utterance.onerror = () => {
+                audioBtn.classList.remove('playing');
+                audioBtn.textContent = '🔊';
+                speaking = false;
+                currentIndex = 0;
+            };
 
-        function siguientePregunta() {
-            if (preguntaActual < preguntas.length - 1) {
-                preguntaActual++;
-                mostrarPregunta();
-            }
+            window.speechSynthesis.speak(utterance);
         }
-
-        function mostrarPuntajeFinal() {
-            document.getElementById('trivia').style.display = "none";
-            const puntajeFinalDiv = document.getElementById('puntajeFinal');
-            puntajeFinalDiv.style.display = "block";
-            puntajeFinalDiv.innerHTML = `¡Encuesta finalizada!<br>Tu puntaje es <b>${puntaje} de ${preguntas.length}</b>.<br>
-            ${puntaje === preguntas.length
-                    ? "<span style='color:var(--color-exito)'>¡Excelente! Has respondido todo correctamente.</span>"
-                    : puntaje >= preguntas.length / 2
-                        ? "<span style='color:var(--color-acento)'>¡Muy bien! Puedes repasar para perfeccionarte.</span>"
-                        : "<span style='color:var(--color-error)'>¡Ánimo! Repasa las leyes y vuelve a intentarlo.</span>"
-                }`;
-            document.getElementById('btnReiniciar').style.display = "block";
-        }
-
-        function reiniciarTrivia() {
-            preguntaActual = 0;
-            puntaje = 0;
-            document.getElementById('puntajeFinal').style.display = "none";
-            document.getElementById('btnReiniciar').style.display = "none";
-            document.getElementById('trivia').style.display = "block";
-            mostrarPregunta();
-        }
-
-        // Inicializar trivia al cargar
-        window.onload = mostrarPregunta;
     </script>
 </body>
 
